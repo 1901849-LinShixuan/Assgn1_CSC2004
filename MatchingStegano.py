@@ -16,8 +16,8 @@ def extract():
 
     bitidx = 0
     bitval = 0
-    temp = ""                               # Temp stored as decoded data
-    stopCondition: bool = False             # Indicator to stop
+    temp = ""                               # Converts bits to characters
+    stopCondition: bool = False             # Boolean Indicator to stop
     for i in range(J.shape[0]):
         if (I[i, 0, 0] == '-'):
             break
@@ -30,18 +30,18 @@ def extract():
                 if (I[i, j, k] == '-'):
                     break
                 if bitidx==8:               # Split bit index by 8-bits
-                    if bitval in list(all_ascii_data):      # Checks if value matches with ascii data
+                    if bitval in list(all_ascii_data):      # Checks payload value
                         temp+=chr(bitval)
-                        bitidx=0
-                        bitval=0
+                        bitidx = 0
+                        bitval = 0
                     else:
-                        stopCondition = True    # Stops condition when there is no ascii data left
+                        stopCondition = True   # Stops condition when garbage appears
                         break
 
                 bitval |= (J[i,j,k]%2)<<bitidx
                 bitidx+= 1
 
-    f.write(temp)       # writes to file
+    f.write(temp)       # writes the file
     f.close()
 
 # ---- Encryption ----
@@ -49,7 +49,7 @@ bits = []
 f = open('payload.txt', 'r')            # secret data that you want to hide
 blist = [ord(b) for b in f.read()]
 
-all_ascii_data = []                     # Takes all ASCII values (to filter)
+all_ascii_data = []                     # Temporarily stores bitval data before writing
 for b in blist:
     all_ascii_data.append(b)            # append into the list before writing
     for i in range(8):
